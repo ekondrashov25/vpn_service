@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import selectinload
 
 from backend.db.models import User, VPNServer, Peer
 from backend.wg.keys import generate_keypair
@@ -87,5 +88,12 @@ async def create_peer(session: AsyncSession, telegram_id: int) -> Peer:
     )
 
     await session.commit()
+
+    result = await session.execute(
+        select(Peer)
+        .options(selectinload(Peer.server))
+        .where(Peer.id == peer.id)
+    )
+    peer = result.scalar_one()
 
     return peer
