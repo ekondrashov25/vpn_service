@@ -4,7 +4,7 @@ import io
 import httpx
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InputFile
 
 from bot.config import BOT_TOKEN, BACKEND_URL
 from bot.keyboards import main_keyboard
@@ -42,14 +42,17 @@ async def get_vpn(callback: CallbackQuery):
 
     config_text = resp.json()["config"]
 
-    conf_file = io.BytesIO(config_text.encode())
-    conf_file.name = "vpn.conf"
+    conf_bytes = io.BytesIO(config_text.encode())
 
-    await callback.message.answer_document(
-        document=conf_file,
-        caption="Готово! 📄\n\nСкачай файл и импортируй в WireGuard."
+    document = InputFile(
+        conf_bytes,
+        filename="vpn.conf"
     )
 
+    await callback.message.answer_document(
+        document=document,
+        caption="Готово! 📄\nИмпортируй файл в WireGuard."
+    )
 
 async def main():
     await dp.start_polling(bot)
