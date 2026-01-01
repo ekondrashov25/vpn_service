@@ -66,6 +66,11 @@ async def create_peer(session: AsyncSession, telegram_id: int) -> Peer:
         )
     )
     used_ips = {row[0] for row in result.all()}
+    
+    print("USED IPS:", used_ips)
+    print("SUBNET:", server.subnet)
+    print("GATEWAY:", server.gateway_ip)
+
 
     try:
         ip_address = allocate_ip(
