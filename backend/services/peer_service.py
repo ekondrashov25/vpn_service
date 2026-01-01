@@ -9,7 +9,7 @@ from backend.ipam.allocator import allocate_ip
 
 
 
-class NoAvaliableServer(Exception):
+class NoAvailableServer(Exception):
     pass    
 
 
@@ -43,7 +43,7 @@ async def create_peer(session: AsyncSession, telegram_id: int) -> Peer:
     server = result.scalar_one_or_none()
     
     if server is None:
-        raise NoAvaliableServer("No active VPN servers available")
+        raise NoAvailableServer("No active VPN servers available")
     
     result = await session.execute(
         select(Peer.ip_address)
