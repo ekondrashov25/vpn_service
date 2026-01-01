@@ -4,7 +4,7 @@ import io
 import httpx
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
-from aiogram.types import CallbackQuery, InputFile
+from aiogram.types import CallbackQuery, BufferedInputFile
 
 from bot.config import BOT_TOKEN, BACKEND_URL
 from bot.keyboards import main_keyboard
@@ -44,10 +44,10 @@ async def get_vpn(callback: CallbackQuery):
 
     conf_bytes = io.BytesIO(config_text.encode())
 
-    document = InputFile(
-        conf_bytes,
-        filename="vpn.conf"
-    )
+    document = BufferedInputFile(
+    config_text.encode(),
+    filename="vpn.conf"
+)
 
     await callback.message.answer_document(
         document=document,
