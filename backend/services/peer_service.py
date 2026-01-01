@@ -83,7 +83,7 @@ async def create_peer(session: AsyncSession, telegram_id: int) -> Peer:
     
     add_peer(
         public_key=public_key,
-        allowed_ip=ip_address,
+        allowed_ips=ip_address,
     )
 
     await session.commit()
