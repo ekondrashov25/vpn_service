@@ -29,6 +29,22 @@ async def create_peer(session: AsyncSession, telegram_id: int) -> Peer:
     )
     user = result.scalar_one_or_none()
     
+
+    result = await session.execute(
+        select(Peer)
+        .where(
+            Peer.user_id == user.id,
+            Peer.is_active == True
+        )
+        .options(selectinload(Peer.server))
+    )
+
+    existing_peer = result.scalar_one_or_none()
+
+    if existing_peer:
+        return existing_peer
+
+    
     if user is None:
         user = User(telegram_id=telegram_id)
         session.add(user)
